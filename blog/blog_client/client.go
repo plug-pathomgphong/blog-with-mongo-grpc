@@ -58,4 +58,19 @@ func main() {
 	}
 	fmt.Println("Blog was read: %v", readBlogres)
 
+	// update blog
+	newBlog := &blogpb.Blog{
+		Id:       blogId,
+		AuthorId: "Pathomphong Menthong",
+		Title:    "My first blog (edited)",
+		Content:  "Content of the first blog, Awesome!",
+	}
+
+	updateRes, updateErr := c.UpdateBlog(context.Background(), &blogpb.UpdateBlogRequest{Blog: newBlog})
+
+	if updateErr != nil {
+		fmt.Printf("Error happened while updateing: %v", readBlogErr)
+	}
+	fmt.Printf("Blog was Updated: %v", updateRes)
+
 }
