@@ -21,7 +21,7 @@ func main() {
 
 	cc, err := grpc.Dial(os.Getenv("LISTEN_CLIENT"), opts)
 	if err != nil {
-		log.Fatalf("could not connect: %v", err)
+		log.Fatalf("could not connect: %v \n", err)
 	}
 	defer cc.Close()
 
@@ -37,9 +37,9 @@ func main() {
 
 	createBlogRes, err := c.CreateBlog(context.Background(), &blogpb.CreateBlogRequest{Blog: blog})
 	if err != nil {
-		log.Fatalf("Unexpected error: %v", err)
+		log.Fatalf("Unexpected error: %v \n", err)
 	}
-	fmt.Println("Blog has been created: %v", createBlogRes)
+	fmt.Println("Blog has been created: %v \n", createBlogRes)
 
 	blogId := createBlogRes.GetBlog().GetId()
 
@@ -48,15 +48,15 @@ func main() {
 
 	_, err2 := c.ReadBlog(context.Background(), &blogpb.ReadBlogRequest{BlogId: "61c46457d7d796381a59580c"})
 	if err2 != nil {
-		fmt.Println("Error happened while reading2: %v", err2)
+		fmt.Println("Error happened while reading2: %v \n", err2)
 	}
 
 	readBlogReq := &blogpb.ReadBlogRequest{BlogId: blogId}
 	readBlogres, readBlogErr := c.ReadBlog(context.Background(), readBlogReq)
 	if readBlogErr != nil {
-		fmt.Println("Error happened while reading: %v", readBlogErr)
+		fmt.Println("Error happened while reading: %v \n", readBlogErr)
 	}
-	fmt.Println("Blog was read: %v", readBlogres)
+	fmt.Println("Blog was read: %v \n", readBlogres)
 
 	// update blog
 	newBlog := &blogpb.Blog{
@@ -69,8 +69,15 @@ func main() {
 	updateRes, updateErr := c.UpdateBlog(context.Background(), &blogpb.UpdateBlogRequest{Blog: newBlog})
 
 	if updateErr != nil {
-		fmt.Printf("Error happened while updateing: %v", readBlogErr)
+		fmt.Printf("Error happened while updateing: %v \n", updateErr)
 	}
-	fmt.Printf("Blog was Updated: %v", updateRes)
+	fmt.Printf("Blog was Updated: %v \n", updateRes)
 
+	// Delete blog
+	deleteRes, deleteErr := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlogId: blogId})
+
+	if deleteErr != nil {
+		fmt.Printf("Error happened while deleting: %v \n", deleteErr)
+	}
+	fmt.Printf("Blog was deleted: %v \n", deleteRes)
 }
