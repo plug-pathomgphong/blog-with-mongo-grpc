@@ -4,6 +4,7 @@ import (
 	"blog-with-mongo-grpc/blog/blogpb"
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -80,4 +81,23 @@ func main() {
 		fmt.Printf("Error happened while deleting: %v \n", deleteErr)
 	}
 	fmt.Printf("Blog was deleted: %v \n", deleteRes)
+
+	// List blog
+	stream, err := c.ListBlog(context.Background(), &blogpb.ListBlogRequest{})
+	if err != nil {
+		log.Fatalf("Error while calling ListBlog RPC: %v \n", err)
+	}
+	for {
+
+		res, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Something happened: %v", err)
+		}
+
+		fmt.Println(res.GetBlog())
+	}
+
 }
